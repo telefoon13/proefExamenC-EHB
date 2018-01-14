@@ -39,7 +39,7 @@ namespace Examen_Voorbeeld
             btnImport.Enabled = true;
             progressBar1.Value = 0;
             btnValidate.Enabled = true;
-            tbResult.Text = string.Format("Import Complete {0} \r\n> {1} files imported \r\n> {2} students in the database.", DateTime.Now, importFileCount, students.Count());
+            tbResult.Text = String.Format("Import Complete {0} \r\n> {1} files imported \r\n> {2} students in the database.", DateTime.Now, importFileCount, students.Count());
         }
 
         private void backgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -108,8 +108,8 @@ namespace Examen_Voorbeeld
         private async void btnValidate_Click(object sender, EventArgs e)
         {
             var taskAantalOngeldige = Task.Run<int>(() => students.Where(x => x.Validate() == false).Count());
-            var taskStudentenOuderDan100 = Task.Run<List<Student>>(() => students.Where(x => (new DateTime(DateTime.Now.Subtract(x.GeboorteDatum).Ticks).Year - 1) > 100).ToList());
-            var taskstudentenJongerDan15 = Task.Run<List<Student>>(() => students.Where(x => (new DateTime(DateTime.Now.Subtract(x.GeboorteDatum).Ticks).Year - 1) < 15).ToList());
+            var taskStudentenOuderDan100 = Task.Run<List<Student>>(() => students.Where(x => x.GeboorteDatum > DateTime.Now.AddYears(-100)).ToList());
+            var taskstudentenJongerDan15 = Task.Run<List<Student>>(() => students.Where(x => x.GeboorteDatum > DateTime.Now.AddYears(-15)).ToList());
             await Task.WhenAll(taskAantalOngeldige, taskStudentenOuderDan100, taskstudentenJongerDan15);
 
             string validationResult = "";
